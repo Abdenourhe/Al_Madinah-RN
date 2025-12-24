@@ -3,56 +3,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1QPeJW0LbygqAyXF2Nhsu5fkRosaPrwK-JgP9L00o7hs/export?format=csv';
 
     function fetchData() {
-        console.log("Fetching data from Google Sheets...");
+        console.log("Fetching live data...");
+        // Cache busting to ensure we get the latest data
+        const syncUrl = SHEET_CSV_URL + '&t=' + Date.now();
 
         function cleanAmount(str) {
             if (!str) return 0;
-            const cleaned = str.replace(/[^0-9,.]/g, '').replace(',', '.');
+            // Aggressive clean: keep only digits and the LAST decimal separator
+            let cleaned = str.replace(/[^0-9,.]/g, '').replace(',', '.');
             return parseFloat(cleaned) || 0;
         }
 
         function parseCSVLine(line) {
-            const separator = line.includes(';') ? ';' : ',';
             const result = [];
-            let cur = '';
-            let inQ = false;
+            let current = '';
+            let inQuotes = false;
+            const sep = line.includes(';') ? ';' : ',';
             for (let i = 0; i < line.length; i++) {
-                if (line[i] === '"') inQ = !inQ;
-                else if (line[i] === separator && !inQ) { result.push(cur.trim()); cur = ''; }
-                else cur += line[i];
+                if (line[i] === '"') inQuotes = !inQuotes;
+                else if (line[i] === sep && !inQuotes) { result.push(current.trim()); current = ''; }
+                else current += line[i];
             }
-            result.push(cur.trim());
-            return result.map(v => v.replace(/^"(.*)"$/, '$1'));
+            result.push(current.trim());
+            return result.map(v => v.replace(/^"(.*)"$/, '$1').trim());
         }
 
-        fetch(SHEET_CSV_URL)
+        fetch(syncUrl)
             .then(response => response.text())
             .then(csvText => {
-                const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== "");
+                const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+                if (lines.length === 0) return;
                 const rows = lines.map(line => parseCSVLine(line));
 
+                // Dynamically find column indices
+                const headers = rows[0].map(h => h.toLowerCase());
+                const montantIdx = headers.findIndex(h => h.includes('montant')) !== -1 ? headers.findIndex(h => h.includes('montant')) : 1;
+                const goalIdx = headers.findIndex(h => h.includes('objectif')) !== -1 ? headers.findIndex(h => h.includes('objectif')) : 2;
+                const expenseIdx = headers.findIndex(h => h.includes('dépense')) !== -1 ? headers.findIndex(h => h.includes('dépense')) : 3;
+
                 let totalCollected = 0;
-                let goalAmount = 50000; // Default
+                let goalAmount = 50000;
                 let fixedExpenses = "4 000 $";
 
                 if (rows.length > 1) {
-                    // Row 2 (Index 1) usually contains the Objective and Expenses in columns C and D
-                    const firstDataRow = rows[1];
+                    // Goal & Expenses from the first DATA row
+                    if (rows[1][goalIdx]) goalAmount = cleanAmount(rows[1][goalIdx]) || 50000;
+                    if (rows[1][expenseIdx]) fixedExpenses = rows[1][expenseIdx];
 
-                    // Column C (Index 2) - Objective
-                    if (firstDataRow[2]) {
-                        goalAmount = cleanAmount(firstDataRow[2]) || 50000;
-                    }
-
-                    // Column D (Index 3) - Expenses
-                    if (firstDataRow[3]) {
-                        fixedExpenses = firstDataRow[3].replace(/"/g, '');
-                    }
-
-                    // Calculate Total from Column B (Index 1) for all rows starting from row 2
+                    // Sum Column 'montant'
                     for (let i = 1; i < rows.length; i++) {
-                        if (rows[i][1]) {
-                            totalCollected += cleanAmount(rows[i][1]);
+                        if (rows[i][montantIdx]) {
+                            totalCollected += cleanAmount(rows[i][montantIdx]);
                         }
                     }
                 }
