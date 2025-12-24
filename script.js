@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progressAmountEl = document.querySelector('.amount');
                 const goalLabelEl = document.querySelector('.goal-label');
 
-                if (goalEl) goalEl.textContent = goalAmount.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
-                if (remainingEl) remainingEl.textContent = remaining.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+                if (goalEl) goalEl.textContent = goalAmount.toLocaleString('fr-FR') + ' $';
+                if (remainingEl) remainingEl.textContent = remaining.toLocaleString('fr-FR') + ' $';
                 if (expensesEl) {
                     const displayExp = fixedExpenses.includes('$') ? fixedExpenses : fixedExpenses + ' $';
                     expensesEl.textContent = displayExp + ' / mois';
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
                 }
 
-                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-FR') + ' $';
 
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
@@ -189,22 +189,8 @@ function animateValue(obj, start, end, duration) {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        const currentVal = easeOutQuart * (end - start) + start;
-
-        // Format: 14 444,00 or 14 444.00 depending on environment support
-        const formatted = currentVal.toLocaleString('fr-CA', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
-        // Split by either comma or dot to be safe
-        const match = formatted.match(/^(.*)[,.](.*)$/);
-        if (match) {
-            obj.innerHTML = `${match[1]}<span class="decimals">,${match[2]}</span>`;
-        } else {
-            obj.innerHTML = formatted;
-        }
-
+        const currentVal = Math.floor(easeOutQuart * (end - start) + start);
+        obj.innerHTML = currentVal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }
