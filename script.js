@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Generate QR Code
     // Generate QR Code
     new QRCode(document.getElementById("qrcode"), {
-        text: "Montmagny.ccim@gmail.com",
+        text: "Don.acmrn@gmail.com",
         width: 64,
         height: 64,
         colorDark: "#0f172a",
