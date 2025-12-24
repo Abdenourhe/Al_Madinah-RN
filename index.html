@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faire un don - Mosquée Rouyn</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="bg-pattern"></div>
+    <div class="bg-overlay"></div>
+
+    <div class="main-layout">
+        <!-- Place 1 & 2: Left Stats Column -->
+        <div class="left-stats-column">
+            <div class="stat-box">
+                <span class="stat-label">Objectif</span>
+                <span class="stat-value text-gold" id="goal-amount">50 000 $</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Reste à collecter</span>
+                <span class="stat-value text-white" id="remaining-amount">40 261 $</span>
+            </div>
+
+            <!-- Place 3: Fixed Expenses -->
+            <div class="fixed-expenses-box">
+                <div class="expense-icon"><i class="fa-solid fa-mosque"></i></div>
+                <div class="expense-info">
+                    <span class="label">Dépenses fixes</span>
+                    <span class="value" id="expenses-amount">1 350 $ / mois</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Center: Hero & Progress -->
+        <section class="hero-section">
+            <header>
+                <h1>Al Madinah Rouyn_Noranda</h1>
+                <p class="title-location"><i class="fa-solid fa-location-dot"></i> Rouyn-Noranda, Qc</p>
+                <p class="subtitle thank-you">Merci pour votre générosité <span class="heart">💛</span></p>
+                <p class="motivational-quote">"Votre générosité est la clé de notre succès et la lumière de notre
+                    communauté"</p>
+            </header>
+
+            <div class="progress-ring-container">
+                <svg class="progress-ring" width="300" height="300" viewBox="0 0 300 300">
+                    <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="20"
+                        fill="transparent" r="120" cx="150" cy="150" />
+                    <circle class="progress-ring__circle" stroke="url(#gradient)" stroke-width="20" fill="transparent"
+                        r="120" cx="150" cy="150" />
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#fbbf24" />
+                            <stop offset="100%" stop-color="#d97706" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="progress-text">
+                    <span class="currency">$</span>
+                    <span class="amount" data-target="9739">0</span>
+                    <span class="goal-label">sur 50 000 $</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Side: Donation Details & Place 3 (Expenses) -->
+        <section class="details-section">
+            <div class="donation-card glass-panel">
+                <div class="card-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <h2>Faire un don par Interac</h2>
+                <p class="instruction">Votre soutien est essentiel pour nos activités.</p>
+
+                <div class="transfer-container">
+                    <div class="email-details" onclick="copyEmail()">
+                        <span class="label">Email de virement</span>
+                        <div class="email-value">
+                            <span id="donation-email">Don.acmrn@gmail.com</span>
+                            <i class="fa-regular fa-copy"></i>
+                        </div>
+                        <span class="tooltip" id="copy-tooltip">Copié!</span>
+
+                        <p class="deposit-note">Dépôt direct automatique</p>
+                    </div>
+
+                    <div class="qr-section">
+                        <div id="qrcode"></div>
+                    </div>
+                </div>
+
+                <div class="blessing-box">
+                    <p class="arabic-text">جزاك الله خيرًا على صدقتك</p>
+                    <p class="translation">Qu'Allah vous accorde la bénédiction</p>
+                </div>
+
+                <div class="whatsapp-display"
+                    style="text-align: center; margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 0.2rem;">Communauté</p>
+                    <a href="https://chat.whatsapp.com/IDENTIFIANT_GROUPE" target="_blank"
+                        style="color: #25d366; text-decoration: none; font-weight: 700; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <i class="fa-brands fa-whatsapp"></i> Rejoindre le Groupe
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Marquee Footer -->
+    <div class="marquee-footer">
+        <div class="marquee-content">
+            <p dir="rtl">جزاك الله خيرًا على صدقتك جعلها الله نورًا وبركة في أهلك ومالك شكرًا على دعمك للمسجد</p>
+        </div>
+    </div>
+
+    <!-- Full Screen Quran Overlay -->
+    <div id="quran-overlay" class="overlay hidden">
+        <div class="overlay-content glass-panel">
+            <button class="close-btn" onclick="closeOverlay()">&times;</button>
+            <div class="verse-container">
+                <div class="verse-icon"><i class="fa-solid fa-book-quran"></i></div>
+                <p class="arabic-verse" id="verse-arabic"></p>
+                <p class="french-verse" id="verse-french"></p>
+                <p class="surah-ref" id="verse-ref"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
