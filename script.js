@@ -140,19 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
-
-        // Generate Site QR Code (Mobile placeholder)
-        const siteQRMobile = document.getElementById("site-qrcode-mobile");
-        if (siteQRMobile) {
-            new QRCode(siteQRMobile, {
-                text: "https://abdenourhe.github.io/Al_Madinah-RN/",
-                width: 100,
-                height: 100,
-                colorDark: "#0f172a",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
     }, 500);
 
     // Initial theme load

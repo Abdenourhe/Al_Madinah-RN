@@ -309,7 +309,7 @@ h1 {
 }
 
 .loc-text {
-    color: var(--text-white);
+    color: var(--primary-gold);
     font-size: 1.1rem;
 }
 
