@@ -69,10 +69,11 @@ body {
 .left-stats-column {
     display: flex;
     flex-direction: column;
-    gap: 3rem;
-    margin-top: 6rem;
-    /* Moved down a bit from 4rem */
-    min-width: 200px;
+    gap: 1.5rem;
+    /* Reduced from 3rem for more compact look */
+    margin-top: 3rem;
+    /* Moved up from 6rem */
+    min-width: 250px;
 }
 
 .stat-box {
@@ -105,7 +106,8 @@ body {
 
 /* Expenses Box (Place 3) */
 .fixed-expenses-box {
-    margin-top: 2rem;
+    margin-top: 0.5rem;
+    /* Reduced from 2rem to balance gap */
     background: rgba(251, 191, 36, 0.1);
     border: 1px solid var(--primary-gold);
     border-radius: 12px;
@@ -147,7 +149,8 @@ body {
     border: 1px solid var(--primary-gold) !important;
     background: rgba(15, 23, 42, 0.6) !important;
     max-width: 220px;
-    margin: 0 auto;
+    margin: 0.5rem auto 0 auto !important;
+    /* Managed spacing here */
 }
 
 .site-visit-card .qr-label {

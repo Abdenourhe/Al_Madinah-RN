@@ -125,19 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
             correctLevel: QRCode.CorrectLevel.H
         });
     }
-
-    // Generate Site QR Code
-    const siteQR = document.getElementById("site-qrcode");
-    if (siteQR) {
-        new QRCode(siteQR, {
-            text: "https://abdenourhe.github.io/Al_Madinah-RN/",
-            width: 100,
-            height: 100,
-            colorDark: "#0f172a",
-            colorLight: "#ffffff",
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    }
 });
 
 function animateValue(obj, start, end, duration) {
