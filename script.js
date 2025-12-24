@@ -86,8 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
                 if (circle) {
-                    const radius = circle.r.baseVal.value;
-                    const circumference = radius * 2 * Math.PI;
+                    const circumference = circle.getTotalLength();
                     const offset = circumference - (percentage / 100) * circumference;
 
                     circle.style.strokeDasharray = `${circumference} ${circumference}`;
@@ -107,12 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Circular Progress Animation (Initial Placeholder removed, logic moved to fetch)
     const circle = document.querySelector('.progress-ring__circle');
-    const radius = circle.r.baseVal.value;
-    const circumference = radius * 2 * Math.PI;
-
-    // Default State before load
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = circumference;
+    if (circle) {
+        const circumference = circle.getTotalLength();
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
+    }
 
 
     // Generate QR Code

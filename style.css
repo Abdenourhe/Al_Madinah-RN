@@ -187,8 +187,8 @@ h1 {
 /* Progress Ring */
 .progress-ring-container {
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 450px;
+    height: 450px;
     margin-bottom: 3rem;
 }
 
@@ -231,20 +231,20 @@ h1 {
 }
 
 .progress-text .amount {
-    font-size: 3.5rem;
+    font-size: 5rem;
     font-weight: 700;
     line-height: 1;
     color: var(--text-white);
 }
 
 .progress-text .currency {
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: var(--primary-gold);
     margin-bottom: -5px;
 }
 
 .progress-text .goal-label {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: var(--text-gray);
     margin-top: 5px;
 }
@@ -606,8 +606,8 @@ h1 {
 
     /* PROGRESS RING FIX */
     .progress-ring-container {
-        width: 240px;
-        height: 240px;
+        width: 320px;
+        height: 320px;
         margin: 2rem auto;
     }
 
@@ -621,7 +621,7 @@ h1 {
     }
 
     .progress-text .amount {
-        font-size: 3rem;
+        font-size: 3.5rem;
     }
 
     .stat-box {
@@ -651,19 +651,19 @@ h1 {
     }
 
     .progress-ring-container {
-        width: 400px;
-        height: 400px;
+        width: 600px;
+        height: 600px;
     }
 
     .progress-ring {
-        width: 400px;
-        height: 400px;
+        width: 600px;
+        height: 600px;
     }
 
     .progress-ring circle {
-        cx: 200;
-        cy: 200;
-        r: 180;
+        cx: 300;
+        cy: 300;
+        r: 240;
     }
 
     .main-layout {
