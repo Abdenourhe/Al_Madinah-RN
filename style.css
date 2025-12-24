@@ -717,27 +717,25 @@ h1 {
         min-height: auto;
     }
 
-    /* REORDERING FOR MOBILE */
+    /* REORDERING FOR MOBILE: Focus on Donation first */
     .hero-section {
         order: 1 !important;
         width: 100%;
     }
 
-    .left-stats-column {
+    .details-section {
         order: 2 !important;
-        margin-top: 0.5rem;
-        /* Moved up */
+        margin-top: 1.5rem;
         width: 100%;
-        max-width: 380px;
-        gap: 1.5rem;
         align-items: center;
     }
 
-    .details-section {
+    .left-stats-column {
         order: 3 !important;
-        margin-top: 1.5rem;
-        /* Moved up from 2.5rem */
+        margin-top: 2rem;
         width: 100%;
+        max-width: 380px;
+        gap: 1.5rem;
         align-items: center;
     }
 
