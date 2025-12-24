@@ -114,24 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Generate Donation QR Code
-    new QRCode(document.getElementById("qrcode"), {
-        text: "Don.acmrn@gmail.com",
-        width: 64,
-        height: 64,
-        colorDark: "#0f172a",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    const donationQR = document.getElementById("qrcode");
+    if (donationQR) {
+        new QRCode(donationQR, {
+            text: "Don.acmrn@gmail.com",
+            width: 64,
+            height: 64,
+            colorDark: "#0f172a",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
 
     // Generate Site QR Code
-    new QRCode(document.getElementById("site-qrcode"), {
-        text: "https://abdenourhe.github.io/Al_Madinah-RN/",
-        width: 100,
-        height: 100,
-        colorDark: "#0f172a",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-    });
+    const siteQR = document.getElementById("site-qrcode");
+    if (siteQR) {
+        new QRCode(siteQR, {
+            text: "https://abdenourhe.github.io/Al_Madinah-RN/",
+            width: 100,
+            height: 100,
+            colorDark: "#0f172a",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
 });
 
 function animateValue(obj, start, end, duration) {

@@ -139,30 +139,38 @@ body {
     color: var(--text-white);
 }
 
-/* Site QR Code */
-.site-qr-container {
+/* Professional Site QR Card */
+.site-visit-card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.8rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 12px;
-    border: 1px dashed rgba(251, 191, 36, 0.3);
+    border: 1px solid var(--primary-gold) !important;
+    background: rgba(15, 23, 42, 0.6) !important;
+    max-width: 220px;
+    margin: 0 auto;
 }
 
-.site-qr-container .qr-label {
-    font-size: 0.8rem;
-    color: var(--text-gray);
+.site-visit-card .qr-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-white);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    margin-bottom: 0.8rem;
 }
 
-.site-qr-container .qr-box {
+.site-visit-card .qr-box {
     background: white;
-    padding: 8px;
+    padding: 10px;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: block;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+}
+
+.site-visit-card .qr-box img,
+.site-visit-card .qr-box canvas {
+    max-width: 100%;
 }
 
 /* Hero Section (Left) */
