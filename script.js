@@ -84,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (goalEl) goalEl.innerHTML = formatCurrencyHTML(goalAmount);
                 if (remainingEl) remainingEl.innerHTML = formatCurrencyHTML(remaining);
                 if (expensesEl) {
-                    const cleanedExp = typeof fixedExpenses === 'string' ? cleanAmount(fixedExpenses) : fixedExpenses;
-                    expensesEl.innerHTML = formatCurrencyHTML(cleanedExp) + ' / mois';
+                    const displayExp = fixedExpenses.includes('$') ? fixedExpenses : fixedExpenses + ' $';
+                    expensesEl.textContent = displayExp + ' / mois';
                 }
 
                 if (progressAmountEl) {
