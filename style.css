@@ -149,10 +149,11 @@ body {
     align-items: center;
     border: 1px solid var(--primary-gold) !important;
     background: rgba(15, 23, 42, 0.6) !important;
-    min-width: 300px;
-    /* Guaranteed width for single-line URL */
-    margin: 0.5rem auto 0 auto !important;
-    /* Balanced spacing */
+    width: 100%;
+    /* Take full width of parent col */
+    min-width: 320px;
+    /* Force width for URL */
+    margin-top: 1rem !important;
 }
 
 .site-visit-card .qr-label {
