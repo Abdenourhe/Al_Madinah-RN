@@ -2,19 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Google Sheet URL (CSV Format)
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1QPeJW0LbygqAyXF2Nhsu5fkRosaPrwK-JgP9L00o7hs/export?format=csv';
 
-    /* Helper to format currency with small decimals for HTML */
-    function formatCurrencyHTML(value) {
-        const formatted = parseFloat(value).toLocaleString('fr-CA', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-        const parts = formatted.split(',');
-        if (parts.length === 2) {
-            return `${parts[0]}<span class="decimals">,${parts[1]}</span> $`;
-        }
-        return formatted + ' $';
-    }
-
     function fetchData() {
         console.log("Fetching live data...");
         // Cache busting to ensure we get the latest data
@@ -81,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progressAmountEl = document.querySelector('.amount');
                 const goalLabelEl = document.querySelector('.goal-label');
 
-                if (goalEl) goalEl.innerHTML = formatCurrencyHTML(goalAmount);
-                if (remainingEl) remainingEl.innerHTML = formatCurrencyHTML(remaining);
+                if (goalEl) goalEl.textContent = goalAmount.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+                if (remainingEl) remainingEl.textContent = remaining.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
                 if (expensesEl) {
                     const displayExp = fixedExpenses.includes('$') ? fixedExpenses : fixedExpenses + ' $';
                     expensesEl.textContent = displayExp + ' / mois';
@@ -94,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
                 }
 
-                if (goalLabelEl) goalLabelEl.innerHTML = 'sur ' + formatCurrencyHTML(goalAmount);
+                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
 
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
@@ -203,7 +190,20 @@ function animateValue(obj, start, end, duration) {
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         const currentVal = easeOutQuart * (end - start) + start;
-        obj.innerHTML = formatCurrencyHTML(currentVal).replace(' $', ''); // Progress ring has its own $ sign below it
+
+        // Queue Format: 14 444,00
+        const formatted = currentVal.toLocaleString('fr-CA', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // Split to make decimals smaller
+        const parts = formatted.split(',');
+        if (parts.length === 2) {
+            obj.innerHTML = `${parts[0]}<span class="decimals">,${parts[1]}</span>`;
+        } else {
+            obj.innerHTML = formatted;
+        }
 
         if (progress < 1) {
             window.requestAnimationFrame(step);

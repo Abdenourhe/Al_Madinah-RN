@@ -27,11 +27,8 @@
 }
 
 .decimals {
-    font-size: 0.5em;
-    /* Even smaller for clear distinction */
-    opacity: 0.85;
-    vertical-align: super;
-    /* Slight lift for professional look */
+    font-size: 0.6em;
+    opacity: 0.8;
     margin-left: 1px;
 }
 
