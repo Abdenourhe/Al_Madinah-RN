@@ -27,9 +27,14 @@
 }
 
 .decimals {
-    font-size: 0.6em;
-    opacity: 0.8;
+    font-size: 0.45em !important;
+    /* Force smaller size */
+    opacity: 0.9 !important;
+    vertical-align: super !important;
+    display: inline-block !important;
+    /* Ensure vertical-align works well */
     margin-left: 1px;
+    font-weight: 500 !important;
 }
 
 * {
