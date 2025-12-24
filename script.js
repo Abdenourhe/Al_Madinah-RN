@@ -14,18 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return parseFloat(cleaned) || 0;
         }
 
-        function formatQuebec(amount, smallCents = true) {
-            const parts = amount.toFixed(2).split('.');
-            // Space for thousands
-            const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            const decimalPart = parts[1];
-
-            if (smallCents) {
-                return `${integerPart},<span class="cents">${decimalPart}</span>`;
-            }
-            return `${integerPart},${decimalPart}`;
-        }
-
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -80,11 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progressAmountEl = document.querySelector('.amount');
                 const goalLabelEl = document.querySelector('.goal-label');
 
-                if (goalEl) goalEl.innerHTML = formatQuebec(goalAmount) + ' $';
-                if (remainingEl) remainingEl.innerHTML = formatQuebec(remaining) + ' $';
+                if (goalEl) goalEl.innerHTML = formatQuebecCurrency(goalAmount, true) + ' $';
+                if (remainingEl) remainingEl.innerHTML = formatQuebecCurrency(remaining, true) + ' $';
                 if (expensesEl) {
-                    const amountExp = cleanAmount(fixedExpenses);
-                    expensesEl.innerHTML = formatQuebec(amountExp) + ' $ / mois';
+                    const expVal = cleanAmount(fixedExpenses);
+                    expensesEl.innerHTML = formatQuebecCurrency(expVal, true) + ' / mois';
                 }
 
                 if (progressAmountEl) {
@@ -93,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
                 }
 
-                if (goalLabelEl) goalLabelEl.innerHTML = 'sur ' + formatQuebec(goalAmount, true) + ' $';
+                if (goalLabelEl) goalLabelEl.innerHTML = 'sur ' + formatQuebecCurrency(goalAmount, true) + ' $';
 
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
@@ -160,6 +148,25 @@ document.addEventListener('DOMContentLoaded', () => {
     updateThemeIcon(savedTheme);
 });
 
+function formatQuebecCurrency(number, isHtml = false) {
+    const formatted = new Intl.NumberFormat('fr-CA', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(number);
+
+    // Quebec format is already space-separated thousands and comma decimal
+    if (isHtml) {
+        // Find the comma and wrap the decimal part in a span
+        const lastCommaIndex = formatted.lastIndexOf(',');
+        if (lastCommaIndex !== -1) {
+            const main = formatted.substring(0, lastCommaIndex);
+            const decimals = formatted.substring(lastCommaIndex); // Includes the comma
+            return `${main}<span class="cents">${decimals}</span>`;
+        }
+    }
+    return formatted;
+}
+
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'day' : 'night';
     const newTheme = currentTheme === 'day' ? 'night' : 'day';
@@ -202,23 +209,12 @@ function animateValue(obj, start, end, duration) {
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         const currentVal = easeOutQuart * (end - start) + start;
-
-        // Use formatQuebec with true for small cents
-        obj.innerHTML = formatQuebecInternal(currentVal);
-
+        obj.innerHTML = formatQuebecCurrency(currentVal, true);
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }
     };
     window.requestAnimationFrame(step);
-}
-
-// Internal helper for animation to avoid closures within closures
-function formatQuebecInternal(amount) {
-    const parts = amount.toFixed(2).split('.');
-    const integerPart = Math.floor(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-    const decimalPart = parts[1];
-    return `${integerPart},<span class="cents">${decimalPart}</span>`;
 }
 
 function copyEmail() {
