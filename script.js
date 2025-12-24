@@ -2,66 +2,94 @@ document.addEventListener('DOMContentLoaded', () => {
     // Google Sheet URL (CSV Format)
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1QPeJW0LbygqAyXF2Nhsu5fkRosaPrwK-JgP9L00o7hs/export?format=csv';
 
-    // Fetch Data
-    fetch(SHEET_CSV_URL)
-        .then(response => response.text())
-        .then(csvText => {
-            const rows = csvText.split('\n').map(row => row.split(','));
+    function fetchData() {
+        console.log("Fetching data from Google Sheets...");
+        fetch(SHEET_CSV_URL)
+            .then(response => response.text())
+            .then(csvText => {
+                // Split lines and detect separator (comma or semicolon)
+                const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== "");
+                const rows = lines.map(line => {
+                    const separator = line.includes(';') ? ';' : ',';
+                    return line.split(separator).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                });
 
-            // Debug: Log parsed rows
-            console.log("Parsed Rows:", rows);
+                let totalCollected = 0;
+                let goalAmount = 50000; // Default
+                let fixedExpenses = "4 000 $";
 
-            let totalCollected = 0;
-            let goalAmount = 0;
-            let fixedExpenses = "0 $";
+                if (rows.length > 1) {
+                    // Row 2 (Index 1) usually contains the Objective and Expenses in columns C and D
+                    const firstDataRow = rows[1];
 
-            // Parse Goal & Expenses from Row 2 (Index 1)
-            // Column C (Index 2) is "objectif", Column D (Index 3) is "dépense fixes"
-            if (rows[1]) {
-                goalAmount = parseFloat(rows[1][2].replace(/[$\s]/g, '').replace(',', '.')) || 50000;
-                fixedExpenses = rows[1][3] ? rows[1][3].trim() : "1 350 $";
-            }
+                    // Column C (Index 2) - Objective
+                    if (firstDataRow[2]) {
+                        const val = parseFloat(firstDataRow[2].replace(/[$\s]/g, '').replace(',', '.'));
+                        if (!isNaN(val)) goalAmount = val;
+                    }
 
-            // Calculate Total from Column B (Index 1) starting row 2
-            for (let i = 1; i < rows.length; i++) {
-                const amountStr = rows[i][1];
-                if (amountStr) {
-                    const amount = parseFloat(amountStr.replace(/[$\s]/g, '').replace(',', '.'));
-                    if (!isNaN(amount)) {
-                        totalCollected += amount;
+                    // Column D (Index 3) - Expenses
+                    if (firstDataRow[3]) {
+                        fixedExpenses = firstDataRow[3].replace(/"/g, '');
+                    }
+
+                    // Calculate Total from Column B (Index 1) for all rows starting from row 2
+                    for (let i = 1; i < rows.length; i++) {
+                        const amountStr = rows[i][1];
+                        if (amountStr) {
+                            const amount = parseFloat(amountStr.replace(/[$\s]/g, '').replace(',', '.'));
+                            if (!isNaN(amount)) {
+                                totalCollected += amount;
+                            }
+                        }
                     }
                 }
-            }
 
-            const remaining = Math.max(0, goalAmount - totalCollected);
-            const percentage = Math.min(100, (totalCollected / goalAmount) * 100);
+                const remaining = Math.max(0, goalAmount - totalCollected);
+                const percentage = Math.min(100, (totalCollected / goalAmount) * 100);
 
-            // Update DOM
-            document.getElementById('goal-amount').textContent = goalAmount.toLocaleString('fr-FR') + ' $';
-            document.getElementById('remaining-amount').textContent = remaining.toLocaleString('fr-FR') + ' $';
-            document.getElementById('expenses-amount').textContent = fixedExpenses + (fixedExpenses.includes('$') ? '' : ' $') + ' / mois';
+                // Update DOM elements with safety checks
+                const goalEl = document.getElementById('goal-amount');
+                const remainingEl = document.getElementById('remaining-amount');
+                const expensesEl = document.getElementById('expenses-amount');
+                const progressAmountEl = document.querySelector('.amount');
+                const goalLabelEl = document.querySelector('.goal-label');
 
-            document.querySelector('.amount').textContent = '0'; // Reset for animation
-            document.querySelector('.amount').setAttribute('data-target', totalCollected);
-            document.querySelector('.goal-label').textContent = 'sur ' + goalAmount.toLocaleString('fr-FR') + ' $';
+                if (goalEl) goalEl.textContent = goalAmount.toLocaleString('fr-FR') + ' $';
+                if (remainingEl) remainingEl.textContent = remaining.toLocaleString('fr-FR') + ' $';
+                if (expensesEl) {
+                    const displayExp = fixedExpenses.includes('$') ? fixedExpenses : fixedExpenses + ' $';
+                    expensesEl.textContent = displayExp + ' / mois';
+                }
 
-            // Re-trigger Animation
-            const circle = document.querySelector('.progress-ring__circle');
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
-            const offset = circumference - (percentage / 100) * circumference;
+                if (progressAmountEl) {
+                    const prevTarget = parseFloat(progressAmountEl.getAttribute('data-target')) || 0;
+                    progressAmountEl.setAttribute('data-target', totalCollected);
+                    animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
+                }
 
-            circle.style.strokeDasharray = `${circumference} ${circumference}`;
-            circle.style.strokeDashoffset = circumference; // Start empty
+                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-FR') + ' $';
 
-            setTimeout(() => {
-                circle.style.strokeDashoffset = offset;
-            }, 500);
+                // Update Progress Ring
+                const circle = document.querySelector('.progress-ring__circle');
+                if (circle) {
+                    const radius = circle.r.baseVal.value;
+                    const circumference = radius * 2 * Math.PI;
+                    const offset = circumference - (percentage / 100) * circumference;
 
-            animateValue(document.querySelector('.amount'), 0, totalCollected, 2000);
+                    circle.style.strokeDasharray = `${circumference} ${circumference}`;
+                    circle.style.transition = 'stroke-dashoffset 1.5s ease-in-out';
+                    circle.style.strokeDashoffset = offset;
+                }
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    }
 
-        })
-        .catch(error => console.error('Error fetching data:', error));
+    // Initial fetch
+    fetchData();
+
+    // Auto-sync every 30 seconds
+    setInterval(fetchData, 30000);
 
 
     // Circular Progress Animation (Initial Placeholder removed, logic moved to fetch)
