@@ -373,20 +373,14 @@ h1 {
     flex-direction: column;
 }
 
-.progress-text .amount-int {
+.progress-text .amount {
     font-size: 4.2rem;
     font-weight: 700;
     line-height: 1;
     color: var(--text-white);
-}
-
-.progress-text .amount-cents {
-    font-size: 1.6rem;
-    font-weight: 700;
-    vertical-align: super;
-    line-height: 1;
-    color: var(--text-white);
-    margin-left: 2px;
+    white-space: nowrap;
+    width: 100%;
+    text-align: center;
 }
 
 .progress-text .currency {
@@ -753,80 +747,84 @@ h1 {
         max-width: 380px;
     }
 
-    .details-section {
-        order: 5 !important;
-        margin-top: 1rem;
-        width: 100%;
-        align-items: center;
-    }
+    width: 100%;
+    max-width: 380px;
+}
 
-    .site-visit-card {
-        order: 6 !important;
-        width: 100%;
-        max-width: 380px;
-        margin-top: 1rem !important;
-    }
+.details-section {
+    order: 5 !important;
+    margin-top: 1rem;
+    width: 100%;
+    align-items: center;
+}
 
-    .share-panel {
-        order: 7 !important;
-        width: 100%;
-        max-width: 380px;
-    }
+.site-visit-card {
+    order: 6 !important;
+    width: 100%;
+    max-width: 380px;
+    margin-top: 1rem !important;
+}
 
-    .details-section h2 {
-        font-size: 1.5rem !important;
-        white-space: nowrap !important;
-        /* Single Line Level */
-        width: 100%;
-        text-align: center;
-    }
+.share-panel {
+    order: 7 !important;
+    width: 100%;
+    max-width: 380px;
+}
 
-    /* TYPOGRAPHY */
-    h1 {
-        font-size: 1.8rem !important;
-        white-space: normal;
-        margin-bottom: 0.5rem;
-    }
+.details-section h2 {
+    font-size: 1.5rem !important;
+    white-space: nowrap !important;
+    /* Single Line Level */
+    width: 100%;
+    text-align: center;
+}
 
-    /* PROGRESS RING FIX */
-    .progress-ring-container {
-        width: 300px;
-        height: 300px;
-        margin: 1.5rem auto;
-    }
+/* TYPOGRAPHY */
+h1 {
+    font-size: 1.8rem !important;
+    white-space: normal;
+    margin-bottom: 0.5rem;
+}
 
-    .progress-ring {
-        width: 100% !important;
-        height: 100% !important;
-    }
+/* PROGRESS RING FIX */
+.progress-ring-container {
+    width: 300px;
+    height: 300px;
+    margin: 1.5rem auto;
+}
 
-    .progress-ring circle {
-        stroke-width: 20;
-    }
+.progress-ring {
+    width: 100% !important;
+    height: 100% !important;
+}
 
-    .progress-text .amount {
-        font-size: 3.2rem;
-    }
+.progress-ring circle {
+    stroke-width: 20;
+}
 
-    .stat-box {
-        width: 100%;
-        padding: 1.5rem;
-        text-align: center;
-        border: 1px solid rgba(251, 191, 36, 0.2);
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 12px;
-    }
+.progress-text .amount {
+    font-size: 3.2rem;
+}
 
-    .marquee-footer {
-        padding: 0.5rem 0;
-        height: 3.5rem;
-        display: flex;
-        align-items: center;
-    }
+.stat-box {
+    width: 100%;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+}
 
-    .marquee-content p {
-        font-size: 1.1rem;
-    }
+.marquee-footer {
+    padding: 0.5rem 0;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.marquee-content p {
+    font-size: 1.1rem;
+}
 }
 
 @media (min-width: 1920px) {

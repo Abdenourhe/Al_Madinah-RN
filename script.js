@@ -75,24 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     expensesEl.textContent = displayExp + ' / mois';
                 }
 
-                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-FR') + ' $';
-
-                // Split Total for Split Display
-                const intPart = Math.floor(totalCollected);
-                const centsPart = Math.round((totalCollected - intPart) * 100);
-
-                const amountIntEl = document.querySelector('.amount-int');
-                const amountCentsEl = document.querySelector('.amount-cents');
-
-                if (amountIntEl && amountCentsEl) {
-                    const prevTarget = parseFloat(amountIntEl.getAttribute('data-target') || "0") +
-                        (parseFloat(amountCentsEl.getAttribute('data-target') || "0") / 100);
-
-                    amountIntEl.setAttribute('data-target', intPart);
-                    amountCentsEl.setAttribute('data-target', centsPart);
-
-                    animateSplitValue(amountIntEl, amountCentsEl, prevTarget, totalCollected, 2000);
+                if (progressAmountEl) {
+                    const prevTarget = parseFloat(progressAmountEl.getAttribute('data-target')) || 0;
+                    progressAmountEl.setAttribute('data-target', totalCollected);
+                    animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
                 }
+
+                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-FR') + ' $';
 
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
@@ -194,20 +183,14 @@ function copySiteLink() {
     });
 }
 
-function animateSplitValue(objInt, objCents, start, end, duration) {
+function animateValue(obj, start, end, duration) {
     let startTimestamp = null;
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-        const currentTotal = easeOutQuart * (end - start) + start;
-
-        const currentInt = Math.floor(currentTotal);
-        const currentCents = Math.round((currentTotal - currentInt) * 100);
-
-        objInt.innerHTML = currentInt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        objCents.innerHTML = currentCents.toString().padStart(2, '0');
-
+        const currentVal = easeOutQuart * (end - start) + start;
+        obj.innerHTML = currentVal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }
