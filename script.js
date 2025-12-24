@@ -3,23 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1QPeJW0LbygqAyXF2Nhsu5fkRosaPrwK-JgP9L00o7hs/export?format=csv';
 
     /* Helper to format currency with small decimals for HTML */
-    /* Robust helper to format currency with small decimals for HTML */
     function formatCurrencyHTML(value) {
         const formatted = parseFloat(value).toLocaleString('fr-CA', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
-
-        // Robust split: detect if it's a comma or period
-        const hasComma = formatted.includes(',');
-        const parts = formatted.split(hasComma ? ',' : '.');
-        const sep = hasComma ? ',' : '.';
-
-        if (parts.length >= 2) {
-            // Rejoin everything except the last part (cents)
-            const cents = parts.pop().replace(' $', '').trim();
-            const main = parts.join(sep);
-            return `${main}<span class="decimals">${sep}${cents}</span> $`;
+        const parts = formatted.split(',');
+        if (parts.length === 2) {
+            return `${parts[0]}<span class="decimals">,${parts[1]}</span> $`;
         }
         return formatted + ' $';
     }
