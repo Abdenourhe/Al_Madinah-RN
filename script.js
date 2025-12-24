@@ -4,15 +4,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function fetchData() {
         console.log("Fetching data from Google Sheets...");
+
+        function cleanAmount(str) {
+            if (!str) return 0;
+            const cleaned = str.replace(/[^0-9,.]/g, '').replace(',', '.');
+            return parseFloat(cleaned) || 0;
+        }
+
+        function parseCSVLine(line) {
+            const separator = line.includes(';') ? ';' : ',';
+            const result = [];
+            let cur = '';
+            let inQ = false;
+            for (let i = 0; i < line.length; i++) {
+                if (line[i] === '"') inQ = !inQ;
+                else if (line[i] === separator && !inQ) { result.push(cur.trim()); cur = ''; }
+                else cur += line[i];
+            }
+            result.push(cur.trim());
+            return result.map(v => v.replace(/^"(.*)"$/, '$1'));
+        }
+
         fetch(SHEET_CSV_URL)
             .then(response => response.text())
             .then(csvText => {
-                // Split lines and detect separator (comma or semicolon)
                 const lines = csvText.split(/\r?\n/).filter(line => line.trim() !== "");
-                const rows = lines.map(line => {
-                    const separator = line.includes(';') ? ';' : ',';
-                    return line.split(separator).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
-                });
+                const rows = lines.map(line => parseCSVLine(line));
 
                 let totalCollected = 0;
                 let goalAmount = 50000; // Default
@@ -24,8 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Column C (Index 2) - Objective
                     if (firstDataRow[2]) {
-                        const val = parseFloat(firstDataRow[2].replace(/[$\s]/g, '').replace(',', '.'));
-                        if (!isNaN(val)) goalAmount = val;
+                        goalAmount = cleanAmount(firstDataRow[2]) || 50000;
                     }
 
                     // Column D (Index 3) - Expenses
@@ -35,12 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Calculate Total from Column B (Index 1) for all rows starting from row 2
                     for (let i = 1; i < rows.length; i++) {
-                        const amountStr = rows[i][1];
-                        if (amountStr) {
-                            const amount = parseFloat(amountStr.replace(/[$\s]/g, '').replace(',', '.'));
-                            if (!isNaN(amount)) {
-                                totalCollected += amount;
-                            }
+                        if (rows[i][1]) {
+                            totalCollected += cleanAmount(rows[i][1]);
                         }
                     }
                 }
