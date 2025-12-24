@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progressAmountEl = document.querySelector('.amount');
                 const goalLabelEl = document.querySelector('.goal-label');
 
-                if (goalEl) goalEl.textContent = goalAmount.toLocaleString('fr-FR') + ' $';
-                if (remainingEl) remainingEl.textContent = remaining.toLocaleString('fr-FR') + ' $';
+                if (goalEl) goalEl.textContent = goalAmount.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
+                if (remainingEl) remainingEl.textContent = remaining.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
                 if (expensesEl) {
                     const displayExp = fixedExpenses.includes('$') ? fixedExpenses : fixedExpenses + ' $';
                     expensesEl.textContent = displayExp + ' / mois';
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
                 }
 
-                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-FR') + ' $';
+                if (goalLabelEl) goalLabelEl.textContent = 'sur ' + goalAmount.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $';
 
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
@@ -190,7 +190,21 @@ function animateValue(obj, start, end, duration) {
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         const currentVal = easeOutQuart * (end - start) + start;
-        obj.innerHTML = currentVal.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // Queue Format: 14 444,00
+        const formatted = currentVal.toLocaleString('fr-CA', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        // Split to make decimals smaller
+        const parts = formatted.split(',');
+        if (parts.length === 2) {
+            obj.innerHTML = `${parts[0]}<span class="decimals">,${parts[1]}</span>`;
+        } else {
+            obj.innerHTML = formatted;
+        }
+
         if (progress < 1) {
             window.requestAnimationFrame(step);
         }

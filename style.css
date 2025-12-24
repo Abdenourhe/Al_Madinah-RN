@@ -26,6 +26,12 @@
     --card-bg: rgba(255, 255, 255, 0.9);
 }
 
+.decimals {
+    font-size: 0.6em;
+    opacity: 0.8;
+    margin-left: 1px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -747,84 +753,80 @@ h1 {
         max-width: 380px;
     }
 
-    width: 100%;
-    max-width: 380px;
-}
+    .details-section {
+        order: 5 !important;
+        margin-top: 1rem;
+        width: 100%;
+        align-items: center;
+    }
 
-.details-section {
-    order: 5 !important;
-    margin-top: 1rem;
-    width: 100%;
-    align-items: center;
-}
+    .site-visit-card {
+        order: 6 !important;
+        width: 100%;
+        max-width: 380px;
+        margin-top: 1rem !important;
+    }
 
-.site-visit-card {
-    order: 6 !important;
-    width: 100%;
-    max-width: 380px;
-    margin-top: 1rem !important;
-}
+    .share-panel {
+        order: 7 !important;
+        width: 100%;
+        max-width: 380px;
+    }
 
-.share-panel {
-    order: 7 !important;
-    width: 100%;
-    max-width: 380px;
-}
+    .details-section h2 {
+        font-size: 1.5rem !important;
+        white-space: nowrap !important;
+        /* Single Line Level */
+        width: 100%;
+        text-align: center;
+    }
 
-.details-section h2 {
-    font-size: 1.5rem !important;
-    white-space: nowrap !important;
-    /* Single Line Level */
-    width: 100%;
-    text-align: center;
-}
+    /* TYPOGRAPHY */
+    h1 {
+        font-size: 1.8rem !important;
+        white-space: normal;
+        margin-bottom: 0.5rem;
+    }
 
-/* TYPOGRAPHY */
-h1 {
-    font-size: 1.8rem !important;
-    white-space: normal;
-    margin-bottom: 0.5rem;
-}
+    /* PROGRESS RING FIX */
+    .progress-ring-container {
+        width: 300px;
+        height: 300px;
+        margin: 1.5rem auto;
+    }
 
-/* PROGRESS RING FIX */
-.progress-ring-container {
-    width: 300px;
-    height: 300px;
-    margin: 1.5rem auto;
-}
+    .progress-ring {
+        width: 100% !important;
+        height: 100% !important;
+    }
 
-.progress-ring {
-    width: 100% !important;
-    height: 100% !important;
-}
+    .progress-ring circle {
+        stroke-width: 20;
+    }
 
-.progress-ring circle {
-    stroke-width: 20;
-}
+    .progress-text .amount {
+        font-size: 3.2rem;
+    }
 
-.progress-text .amount {
-    font-size: 3.2rem;
-}
+    .stat-box {
+        width: 100%;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 12px;
+    }
 
-.stat-box {
-    width: 100%;
-    padding: 1.5rem;
-    text-align: center;
-    border: 1px solid rgba(251, 191, 36, 0.2);
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-}
+    .marquee-footer {
+        padding: 0.5rem 0;
+        height: 3.5rem;
+        display: flex;
+        align-items: center;
+    }
 
-.marquee-footer {
-    padding: 0.5rem 0;
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
-}
-
-.marquee-content p {
-    font-size: 1.1rem;
-}
+    .marquee-content p {
+        font-size: 1.1rem;
+    }
 }
 
 @media (min-width: 1920px) {
