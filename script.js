@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Generate Site QR Code
+        // Generate Site QR Code (Desktop)
         const siteQR = document.getElementById("site-qrcode");
         if (siteQR) {
             new QRCode(siteQR, {
@@ -140,8 +140,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
+
+        // Generate Site QR Code (Mobile placeholder)
+        const siteQRMobile = document.getElementById("site-qrcode-mobile");
+        if (siteQRMobile) {
+            new QRCode(siteQRMobile, {
+                text: "https://abdenourhe.github.io/Al_Madinah-RN/",
+                width: 100,
+                height: 100,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
     }, 500);
+
+    // Initial theme load
+    const savedTheme = localStorage.getItem('theme') || 'night';
+    document.documentElement.setAttribute('data-theme', savedTheme === 'day' ? 'light' : 'dark');
+    updateThemeIcon(savedTheme);
 });
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'day' : 'night';
+    const newTheme = currentTheme === 'day' ? 'night' : 'day';
+    document.documentElement.setAttribute('data-theme', newTheme === 'day' ? 'light' : 'dark');
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = document.querySelector('#theme-toggle i');
+    if (icon) {
+        icon.className = theme === 'day' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+}
+
+/* Sharing Functions */
+function getShareText() {
+    return encodeURIComponent("Faites un don pour la Mosquée de Rouyn-Noranda : https://abdenourhe.github.io/Al_Madinah-RN/");
+}
+
+function shareWhatsApp() {
+    window.open(`https://wa.me/?text=${getShareText()}`, '_blank');
+}
+
+function shareFacebook() {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+}
+
+function copySiteLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("Lien copié !");
+    });
+}
 
 function animateValue(obj, start, end, duration) {
     let startTimestamp = null;

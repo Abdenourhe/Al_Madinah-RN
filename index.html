@@ -12,6 +12,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style id="theme-style"></style>
 </head>
 
 <body>
@@ -39,13 +40,43 @@
                 </div>
             </div>
 
+            <!-- Site Link QR Code (PC Position) -->
+            <div class="site-visit-card glass-panel pc-only" style="padding: 1.2rem;">
+                <p class="qr-label">Visiter notre site</p>
+                <div id="site-qrcode" class="qr-box"></div>
+                <p class="site-url"
+                    style="font-size: 0.72rem; color: var(--primary-gold); margin-top: 0.8rem; white-space: nowrap !important; font-weight: 600; text-align: center; width: 100%; display: block;">
+                    abdenourhe.github.io/Al_Madinah-RN/</p>
+            </div>
+
+            <!-- Quick Share Tools -->
+            <div class="share-panel glass-panel">
+                <p class="share-label">Partager</p>
+                <div class="share-buttons">
+                    <button onclick="shareWhatsApp()" class="share-btn whatsapp" title="Partager sur WhatsApp"><i
+                            class="fa-brands fa-whatsapp"></i></button>
+                    <button onclick="shareFacebook()" class="share-btn facebook" title="Partager sur Facebook"><i
+                            class="fa-brands fa-facebook"></i></button>
+                    <button onclick="copySiteLink()" class="share-btn copy" title="Copier le lien"><i
+                            class="fa-solid fa-link"></i></button>
+                </div>
+            </div>
+
         </div>
 
         <!-- Center: Hero & Progress -->
         <section class="hero-section">
             <header>
+                <div class="theme-toggle-container">
+                    <button id="theme-toggle" onclick="toggleTheme()" title="Changer de mode">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </div>
                 <h1>Al Madinah Rouyn_Noranda</h1>
-                <p class="title-location"><i class="fa-solid fa-location-dot"></i> Rouyn-Noranda, Qc</p>
+                <div class="title-location">
+                    <span class="loc-icon"><i class="fa-solid fa-location-dot"></i></span>
+                    <span class="loc-text">Rouyn-Noranda, Qc</span>
+                </div>
                 <p class="subtitle thank-you">Merci pour votre générosité <span class="heart">💛</span></p>
                 <p class="motivational-quote">"Votre générosité est la clé de notre succès et la lumière de notre
                     communauté"</p>
@@ -114,10 +145,10 @@
                 </div>
             </div>
 
-            <!-- Site Link QR Code - Moved here for Mobile Ordering -->
-            <div class="site-visit-card glass-panel" style="padding: 1.2rem;">
+            <!-- Site Link QR Code (Mobile Only Order) -->
+            <div class="site-visit-card glass-panel mobile-only" style="padding: 1.2rem; margin-top: 1.5rem;">
                 <p class="qr-label">Visiter notre site</p>
-                <div id="site-qrcode" class="qr-box"></div>
+                <div id="site-qrcode-mobile" class="qr-box"></div>
                 <p class="site-url"
                     style="font-size: 0.72rem; color: var(--primary-gold); margin-top: 0.8rem; white-space: nowrap !important; font-weight: 600; text-align: center; width: 100%; display: block;">
                     abdenourhe.github.io/Al_Madinah-RN/</p>
@@ -125,12 +156,7 @@
         </section>
     </div>
 
-    <!-- Marquee Footer -->
-    <div class="marquee-footer">
-        <div class="marquee-content">
-            <p dir="rtl">جزاك الله خيرًا على صدقتك جعلها الله نورًا وبركة في أهلك ومالك شكرًا على دعمك للمسجد</p>
-        </div>
-    </div>
+    <!-- Footers removed as per user request (X marks in image) -->
 
     <!-- Full Screen Quran Overlay -->
     <div id="quran-overlay" class="overlay hidden">
