@@ -58,7 +58,8 @@ body {
     /* Allow wrapping on small screens */
     flex: 1;
     min-height: 100vh;
-    padding: 6rem 2rem 14rem 2rem;
+    padding: 3rem 2rem 14rem 2rem;
+    /* Reduced from 6rem to move everything up */
     gap: 2rem;
     align-items: flex-start;
     justify-content: space-between;
@@ -69,10 +70,10 @@ body {
 .left-stats-column {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    /* Reduced from 3rem for more compact look */
-    margin-top: 3rem;
-    /* Moved up from 6rem */
+    gap: 0.5rem;
+    /* Minimized to eliminate empty space */
+    margin-top: 2rem;
+    /* Moved up from 3rem */
     min-width: 250px;
 }
 
@@ -106,8 +107,8 @@ body {
 
 /* Expenses Box (Place 3) */
 .fixed-expenses-box {
-    margin-top: 0.5rem;
-    /* Reduced from 2rem to balance gap */
+    margin-top: 0;
+    /* Eliminated empty space */
     background: rgba(251, 191, 36, 0.1);
     border: 1px solid var(--primary-gold);
     border-radius: 12px;
@@ -148,9 +149,10 @@ body {
     align-items: center;
     border: 1px solid var(--primary-gold) !important;
     background: rgba(15, 23, 42, 0.6) !important;
-    max-width: 220px;
+    min-width: 300px;
+    /* Guaranteed width for single-line URL */
     margin: 0.5rem auto 0 auto !important;
-    /* Managed spacing here */
+    /* Balanced spacing */
 }
 
 .site-visit-card .qr-label {
@@ -601,8 +603,8 @@ h1 {
         flex-direction: column;
         align-items: center;
         height: auto;
-        padding: 2rem 1rem 12rem 1rem;
-        /* Minimized bottom padding */
+        padding: 1rem 1rem 12rem 1rem;
+        /* Reduced from 2rem to move title up */
         gap: 1.5rem;
         /* Minimized horizontal/vertical gap */
         min-height: auto;
