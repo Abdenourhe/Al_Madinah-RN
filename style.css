@@ -12,6 +12,13 @@
     --card-bg: rgba(15, 23, 42, 0.6);
 }
 
+.small-cents {
+    font-size: 0.65em;
+    vertical-align: baseline;
+    opacity: 0.9;
+    margin-left: 2px;
+}
+
 [data-theme="light"] {
     --bg-dark: #f8fafc;
     --bg-darker: #e2e8f0;
@@ -729,7 +736,7 @@ h1 {
         /* Allow children to be reordered globally */
     }
 
-    .goal-box {
+    .fixed-expenses-box {
         order: 2 !important;
         width: 100%;
         max-width: 380px;
@@ -741,7 +748,7 @@ h1 {
         max-width: 380px;
     }
 
-    .fixed-expenses-box {
+    .goal-box {
         order: 4 !important;
         width: 100%;
         max-width: 380px;
