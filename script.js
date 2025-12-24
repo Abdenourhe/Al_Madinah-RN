@@ -191,16 +191,16 @@ function animateValue(obj, start, end, duration) {
         const easeOutQuart = 1 - Math.pow(1 - progress, 4);
         const currentVal = easeOutQuart * (end - start) + start;
 
-        // Queue Format: 14 444,00
+        // Format: 14 444,00 or 14 444.00 depending on environment support
         const formatted = currentVal.toLocaleString('fr-CA', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
 
-        // Split to make decimals smaller
-        const parts = formatted.split(',');
-        if (parts.length === 2) {
-            obj.innerHTML = `${parts[0]}<span class="decimals">,${parts[1]}</span>`;
+        // Split by either comma or dot to be safe
+        const match = formatted.match(/^(.*)[,.](.*)$/);
+        if (match) {
+            obj.innerHTML = `${match[1]}<span class="decimals">,${match[2]}</span>`;
         } else {
             obj.innerHTML = formatted;
         }
