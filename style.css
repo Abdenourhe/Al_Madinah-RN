@@ -12,13 +12,6 @@
     --card-bg: rgba(15, 23, 42, 0.6);
 }
 
-.small-cents {
-    font-size: 0.65em;
-    vertical-align: baseline;
-    opacity: 0.9;
-    margin-left: 2px;
-}
-
 [data-theme="light"] {
     --bg-dark: #f8fafc;
     --bg-darker: #e2e8f0;
@@ -390,6 +383,13 @@ h1 {
     text-align: center;
 }
 
+.cents {
+    font-size: 0.55em;
+    /* Smaller size for decimals */
+    opacity: 0.85;
+    margin-left: 2px;
+}
+
 .progress-text .currency {
     font-size: 1.8rem;
     color: var(--primary-gold);
@@ -736,7 +736,7 @@ h1 {
         /* Allow children to be reordered globally */
     }
 
-    .fixed-expenses-box {
+    .goal-box {
         order: 2 !important;
         width: 100%;
         max-width: 380px;
@@ -748,7 +748,7 @@ h1 {
         max-width: 380px;
     }
 
-    .goal-box {
+    .fixed-expenses-box {
         order: 4 !important;
         width: 100%;
         max-width: 380px;

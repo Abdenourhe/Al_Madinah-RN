@@ -14,6 +14,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return parseFloat(cleaned) || 0;
         }
 
+        function formatQuebec(amount, smallCents = true) {
+            const parts = amount.toFixed(2).split('.');
+            // Space for thousands
+            const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            const decimalPart = parts[1];
+
+            if (smallCents) {
+                return `${integerPart},<span class="cents">${decimalPart}</span>`;
+            }
+            return `${integerPart},${decimalPart}`;
+        }
+
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -26,13 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             result.push(current.trim());
             return result.map(v => v.replace(/^"(.*)"$/, '$1').trim());
-        }
-
-        function formatCurrencyQC(amount) {
-            const parts = amount.toFixed(2).split('.');
-            // Thousands separator with space
-            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            return `${parts[0]},<span class="small-cents">${parts[1]}</span> $`;
         }
 
         fetch(syncUrl)
@@ -50,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 let totalCollected = 0;
                 let goalAmount = 50000;
-                let fixedExpenses = "4000";
+                let fixedExpenses = "4 000 $";
 
                 if (rows.length > 1) {
                     // Goal & Expenses from the first DATA row
@@ -75,11 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const progressAmountEl = document.querySelector('.amount');
                 const goalLabelEl = document.querySelector('.goal-label');
 
-                if (goalEl) goalEl.innerHTML = formatCurrencyQC(goalAmount);
-                if (remainingEl) remainingEl.innerHTML = formatCurrencyQC(remaining);
+                if (goalEl) goalEl.innerHTML = formatQuebec(goalAmount) + ' $';
+                if (remainingEl) remainingEl.innerHTML = formatQuebec(remaining) + ' $';
                 if (expensesEl) {
-                    const cleanExp = cleanAmount(fixedExpenses);
-                    expensesEl.innerHTML = formatCurrencyQC(cleanExp) + ' / mois';
+                    const amountExp = cleanAmount(fixedExpenses);
+                    expensesEl.innerHTML = formatQuebec(amountExp) + ' $ / mois';
                 }
 
                 if (progressAmountEl) {
@@ -88,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     animateValue(progressAmountEl, prevTarget, totalCollected, 2000);
                 }
 
-                if (goalLabelEl) goalLabelEl.innerHTML = 'sur ' + formatCurrencyQC(goalAmount);
+                if (goalLabelEl) goalLabelEl.innerHTML = 'sur ' + formatQuebec(goalAmount, true) + ' $';
 
                 // Update Progress Ring
                 const circle = document.querySelector('.progress-ring__circle');
@@ -110,86 +115,172 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-sync every 30 seconds
     setInterval(fetchData, 30000);
 
-    function animateValue(obj, start, end, duration) {
-        let startTimestamp = null;
-        const step = (timestamp) => {
-            if (!startTimestamp) startTimestamp = timestamp;
-            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-            const easeOutQuart = 1 - Math.pow(1 - progress, 4);
-            const currentVal = easeOutQuart * (end - start) + start;
 
-            // Format during animation
-            const parts = currentVal.toFixed(2).split('.');
-            parts[0] = Math.floor(currentVal).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-            obj.innerHTML = `${parts[0]},<span class="small-cents">${parts[1]}</span>`;
-
-            if (progress < 1) {
-                window.requestAnimationFrame(step);
-            }
-        };
-        window.requestAnimationFrame(step);
+    // Circular Progress Animation (Initial Placeholder removed, logic moved to fetch)
+    const circle = document.querySelector('.progress-ring__circle');
+    if (circle) {
+        const circumference = circle.getTotalLength();
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = circumference;
     }
 
-    function copyEmail() {
-        const emailText = document.getElementById('donation-email').innerText;
-        const tooltip = document.getElementById('copy-tooltip');
-        navigator.clipboard.writeText(emailText).then(() => {
-            tooltip.classList.add('show');
-            setTimeout(() => {
-                tooltip.classList.remove('show');
-            }, 2000);
-        });
-    }
 
-    /* Quran Verses Popup Logic */
-    const verses = [
-        {
-            arabic: "(مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ فِي كُلِّ سُنبُلَةٍ مِّائَةُ حَبَّةٍ ۗ وَاللَّهُ يُضَاعِفُ لِمَن يَشَاءُ ۗ وَاللَّهُ وَاسِعٌ عَلِيمٌ)",
-            french: "Ceux qui dépensent leurs biens dans le sentier d'Allah ressemblent à un grain d'où naissent sept épis, à cent grains l'épi. Car Allah multiplie la récompense à qui Il veut et la grâce d'Allah est immense, et Il est Omniscient.",
-            ref: "Sourate Al-Baqarah, 2:261"
-        },
-        {
-            arabic: "لَن تَنَالُوا الْبِرَّ حَتَّىٰ تُنفِقُوا مِمَّا تُحِبُّونَ ۚ وَمَا تُنفِقُوا مِن شَيْءٍ فَإِنَّ اللَّهَ بِهِ عَلِيمٌ",
-            french: "Vous n'atteindrez la vraie piété que si vous faites largesses de ce que vous chérissez. Tout ce que vous faites comme dépense, Allah le sait parfaitement.",
-            ref: "Sourate Al-Imran, 3:92"
-        },
-        {
-            arabic: "الَّذِينَ يُنفِقُونَ أَمْوَالَهُم بِاللَّيْلِ وَالنَّهَارِ سِرًّا وَعَلَانِيَةً فَلَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ وَلَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ",
-            french: "Ceux qui, de nuit et de jour, en secret et ouvertement, dépensent leurs biens (dans les bonnes oeuvres), ont leur salaire auprès de leur Seigneur. Il n'y a aucune crainte à avoir pour eux, et ils ne seront point affligés.",
-            ref: "Sourate Al-Baqarah, 2:274"
-        },
-        {
-            arabic: "وَمَا أَنفَقْتُم مِّن شَيْءٍ فَهُوَ يُخْلِفُهُ ۖ وَهُوَ خَيْرُ الرَّازِقِينَ",
-            french: "Et toute dépense que vous faites (dans le bien), Il la remplace, et c'est Lui le Meilleur des donateurs.",
-            ref: "Sourate Saba, 34:39"
+    // Generate QR Codes with a small delay to ensure DOM is ready
+    setTimeout(() => {
+        // Generate Donation QR Code
+        const donationQR = document.getElementById("qrcode");
+        if (donationQR) {
+            new QRCode(donationQR, {
+                text: "Don.acmrn@gmail.com",
+                width: 64,
+                height: 64,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
         }
-    ];
 
-    function showOverlay() {
-        const overlay = document.getElementById('quran-overlay');
-        const arabicEl = document.getElementById('verse-arabic');
-        const frenchEl = document.getElementById('verse-french');
-        const refEl = document.getElementById('verse-ref');
+        // Generate Site QR Code (Desktop)
+        const siteQR = document.getElementById("site-qrcode");
+        if (siteQR) {
+            new QRCode(siteQR, {
+                text: "https://abdenourhe.github.io/Al_Madinah-RN/",
+                width: 100,
+                height: 100,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+    }, 500);
 
-        const verse = verses[Math.floor(Math.random() * verses.length)];
+    // Initial theme load
+    const savedTheme = localStorage.getItem('theme') || 'night';
+    document.documentElement.setAttribute('data-theme', savedTheme === 'day' ? 'light' : 'dark');
+    updateThemeIcon(savedTheme);
+});
 
-        arabicEl.innerText = verse.arabic;
-        frenchEl.innerText = verse.french;
-        refEl.innerText = verse.ref;
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') === 'light' ? 'day' : 'night';
+    const newTheme = currentTheme === 'day' ? 'night' : 'day';
+    document.documentElement.setAttribute('data-theme', newTheme === 'day' ? 'light' : 'dark');
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
 
-        overlay.classList.remove('hidden');
-
-        // Auto hide after 30 seconds
-        setTimeout(closeOverlay, 30000);
+function updateThemeIcon(theme) {
+    const icon = document.querySelector('#theme-toggle i');
+    if (icon) {
+        icon.className = theme === 'day' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
     }
+}
 
-    function closeOverlay() {
-        const overlay = document.getElementById('quran-overlay');
-        overlay.classList.add('hidden');
+/* Sharing Functions */
+function getShareText() {
+    return encodeURIComponent("Faites un don pour la Mosquée de Rouyn-Noranda : https://abdenourhe.github.io/Al_Madinah-RN/");
+}
+
+function shareWhatsApp() {
+    window.open(`https://wa.me/?text=${getShareText()}`, '_blank');
+}
+
+function shareFacebook() {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+}
+
+function copySiteLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("Lien copié !");
+    });
+}
+
+function animateValue(obj, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+        const currentVal = easeOutQuart * (end - start) + start;
+
+        // Use formatQuebec with true for small cents
+        obj.innerHTML = formatQuebecInternal(currentVal);
+
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Internal helper for animation to avoid closures within closures
+function formatQuebecInternal(amount) {
+    const parts = amount.toFixed(2).split('.');
+    const integerPart = Math.floor(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    const decimalPart = parts[1];
+    return `${integerPart},<span class="cents">${decimalPart}</span>`;
+}
+
+function copyEmail() {
+    const emailText = document.getElementById('donation-email').innerText;
+    const tooltip = document.getElementById('copy-tooltip');
+    navigator.clipboard.writeText(emailText).then(() => {
+        tooltip.classList.add('show');
+        setTimeout(() => {
+            tooltip.classList.remove('show');
+        }, 2000);
+    });
+}
+
+/* Quran Verses Popup Logic */
+const verses = [
+    {
+        arabic: "(مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ فِي كُلِّ سُنبُلَةٍ مِّائَةُ حَبَّةٍ ۗ وَاللَّهُ يُضَاعِفُ لِمَن يَشَاءُ ۗ وَاللَّهُ وَاسِعٌ عَلِيمٌ)",
+        french: "Ceux qui dépensent leurs biens dans le sentier d'Allah ressemblent à un grain d'où naissent sept épis, à cent grains l'épi. Car Allah multiplie la récompense à qui Il veut et la grâce d'Allah est immense, et Il est Omniscient.",
+        ref: "Sourate Al-Baqarah, 2:261"
+    },
+    {
+        arabic: "لَن تَنَالُوا الْبِرَّ حَتَّىٰ تُنفِقُوا مِمَّا تُحِبُّونَ ۚ وَمَا تُنفِقُوا مِن شَيْءٍ فَإِنَّ اللَّهَ بِهِ عَلِيمٌ",
+        french: "Vous n'atteindrez la vraie piété que si vous faites largesses de ce que vous chérissez. Tout ce que vous faites comme dépense, Allah le sait parfaitement.",
+        ref: "Sourate Al-Imran, 3:92"
+    },
+    {
+        arabic: "الَّذِينَ يُنفِقُونَ أَمْوَالَهُم بِاللَّيْلِ وَالنَّهَارِ سِرًّا وَعَلَانِيَةً فَلَهُمْ أَجْرُهُمْ عِندَ رَبِّهِمْ وَلَا خَوْفٌ عَلَيْهِمْ وَلَا هُمْ يَحْزَنُونَ",
+        french: "Ceux qui, de nuit et de jour, en secret et ouvertement, dépensent leurs biens (dans les bonnes oeuvres), ont leur salaire auprès de leur Seigneur. Il n'y a aucune crainte à avoir pour eux, et ils ne seront point affligés.",
+        ref: "Sourate Al-Baqarah, 2:274"
+    },
+    {
+        arabic: "وَمَا أَنفَقْتُم مِّن شَيْءٍ فَهُوَ يُخْلِفُهُ ۖ وَهُوَ خَيْرُ الرَّازِقِينَ",
+        french: "Et toute dépense que vous faites (dans le bien), Il la remplace, et c'est Lui le Meilleur des donateurs.",
+        ref: "Sourate Saba, 34:39"
     }
+];
 
-    // Initial call to set interval (2 minutes)
-    setInterval(showOverlay, 120000);
+function showOverlay() {
+    const overlay = document.getElementById('quran-overlay');
+    const arabicEl = document.getElementById('verse-arabic');
+    const frenchEl = document.getElementById('verse-french');
+    const refEl = document.getElementById('verse-ref');
+
+    const verse = verses[Math.floor(Math.random() * verses.length)];
+
+    arabicEl.innerText = verse.arabic;
+    frenchEl.innerText = verse.french;
+    refEl.innerText = verse.ref;
+
+    overlay.classList.remove('hidden');
+
+    // Auto hide after 30 seconds
+    setTimeout(closeOverlay, 30000);
+}
+
+function closeOverlay() {
+    const overlay = document.getElementById('quran-overlay');
+    overlay.classList.add('hidden');
+}
+
+// Initial call to set interval (2 minutes)
+setInterval(showOverlay, 120000);
 
 // Uncomment to test popup immediately
 // setTimeout(showOverlay, 3000);
