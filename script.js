@@ -128,10 +128,23 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Generate Site QR Code (Desktop)
-        const siteQR = document.getElementById("site-qrcode");
-        if (siteQR) {
-            new QRCode(siteQR, {
+        // Generate Site QR Code (Desktop placeholder)
+        const siteQRPC = document.getElementById("site-qrcode-pc");
+        if (siteQRPC) {
+            new QRCode(siteQRPC, {
+                text: "https://abdenourhe.github.io/Al_Madinah-RN/",
+                width: 100,
+                height: 100,
+                colorDark: "#0f172a",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Generate Site QR Code (Mobile placeholder)
+        const siteQRMobile = document.getElementById("site-qrcode-mobile");
+        if (siteQRMobile) {
+            new QRCode(siteQRMobile, {
                 text: "https://abdenourhe.github.io/Al_Madinah-RN/",
                 width: 100,
                 height: 100,

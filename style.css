@@ -456,16 +456,6 @@ h1 {
     width: 100%;
 }
 
-.donation-card {
-    min-height: 520px;
-    /* Extended downwards for PC balance */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding-bottom: 3rem !important;
-    /* Extra space at the bottom */
-}
-
 .card-icon {
     font-size: 3rem;
     color: var(--primary-gold);
